@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClauseSense</title>
+    <meta name="description" content="AI Legal Sentinel for India — Privacy-first contract analyzer running locally." />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            boxShadow: {
+              soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+            },
+            colors: {
+              ink: {
+                950: "#0b1220",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body class="min-h-screen bg-slate-50 text-slate-900">
+    <!-- Top Nav -->
+   <header class="sticky top-0 z-10 border-b border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900 backdrop-blur">
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-8 sm:px-6">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-3">
+            <span class="nav-title truncate text-5xl font-semibold tracking-tight text-emerald-500">
+  ClauseSense
+</span>
+            <span class="subtitle-animate hidden text-base text-slate-500 sm:inline">
+  Privacy-First Contract Analyzer
+</span>
+          </div>
+          <div class="mt-0.5 text-base text-slate-500 sm:hidden">Privacy-First Contract Analyzer</div>
+        </div>
+
+        <div class="shrink-0">
+          <span
+            class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800"
+            title="Processing happens on your machine via your local backend."
+          >
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            Runs Locally (No Data Stored)
+          </span>
+           <button
+    id="themeToggle"
+    class="rounded-lg border px-3 py-1 text-sm bg-white dark:bg-slate-800 dark:text-white"
+  >
+    🌙
+  </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <!-- Page Title -->
+      <div class="mb-6">
+        <h1 class="heading-animate text-xl font-semibold tracking-tight text-emerald-700">
+  AI Legal Sentinel for India
+</h1>
+        <p class="mt-1 text-sm text-slate-600">
+          Upload a contract PDF and view a clause-by-clause risk summary with India-specific law references.
+        </p>
+      </div>
+
+      <!-- 2-panel layout -->
+      <section class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <!-- LEFT: Upload -->
+        <div class="lg:col-span-5">
+          <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-base font-semibold text-slate-900">Upload Contract</h2>
+                <p class="mt-1 text-sm text-slate-600">PDF only. Fast, minimal, and privacy-first.</p>
+              </div>
+              <div class="hidden sm:block">
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">Local analysis UI</span>
+              </div>
+            </div>
+
+            <div class="mt-5 space-y-4">
+              <div>
+                <label for="fileInput" class="block text-sm font-medium text-slate-800">Select PDF</label>
+                <div class="mt-2 flex items-center gap-3">
+                  <input
+                    id="fileInput"
+                    type="file"
+                    accept="application/pdf"
+                    class="block w-full cursor-pointer rounded-xl border border-slate-200 bg-white text-sm text-slate-700 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-400 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                  />
+                </div>
+                <p id="fileMeta" class="mt-2 text-xs text-slate-500">No file selected.</p>
+              </div>
+
+              <!-- Drag & Drop -->
+              <div
+                id="dropzone"
+                class="group rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 transition hover:border-slate-400 hover:bg-slate-100"
+                role="button"
+                tabindex="0"
+                aria-label="Drag and drop contract PDF here"
+              >
+                <div class="flex items-start gap-4">
+                  <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
+                    <svg class="h-5 w-5 text-slate-700" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M7 18a4 4 0 0 1 .4-7.98A6 6 0 0 1 19 12h1a3 3 0 0 1 0 6H7Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12 12v7m0-7 3 3m-3-3-3 3"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-sm font-medium text-slate-800">Drag & drop your PDF here</p>
+                    <p class="mt-1 text-xs text-slate-600">
+                      Or click this area to choose a file. We only send it to your local backend at
+                      <span class="font-mono">localhost</span>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <button
+                  id="analyzeBtn"
+                  class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-slate-300 disabled:cursor-not-allowed disabled:bg-blue-300"
+                  disabled
+                >
+                  <svg id="spinner" class="hidden h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 0 1 8-8v3a5 5 0 0 0-5 5H4Z"
+                    ></path>
+                  </svg>
+                  Analyze Contract
+                </button>
+
+                <div class="text-xs text-slate-600">
+                  <span class="font-medium text-slate-700">Note:</span>
+                  Your document is processed locally and not stored.
+                </div>
+              </div>
+
+              <div id="status" class="hidden rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700"></div>
+              <div id="error" class="hidden rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Results -->
+        <div class="lg:col-span-7">
+          <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-base font-semibold text-slate-900">Analysis Results</h2>
+                <p class="mt-1 text-sm text-slate-600">Clause summaries, risk scores, and law references.</p>
+              </div>
+              <div class="hidden sm:flex items-center gap-2">
+                <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">ELI5 explanations</span>
+              </div>
+            </div>
+
+            <div
+              id="results"
+              class="mt-5 max-h-[460px] space-y-4 overflow-auto rounded-2xl border border-slate-100 bg-slate-50 p-4"
+            >
+              <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-600">
+                No results yet. Upload a contract to begin.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom: Overall Score -->
+      <section class="mt-6">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 class="text-base font-semibold text-slate-900">Overall Risk Score</h3>
+              <p class="mt-1 text-sm text-slate-600">A simple roll-up score (0–100).</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button
+                id="downloadBtn"
+                class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled
+                title="UI only"
+              >
+                Download Report
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <div class="flex items-center justify-between text-xs text-slate-600">
+              <span>Low</span>
+              <span id="overallLabel" class="font-medium text-slate-700">—</span>
+              <span>High</span>
+            </div>
+            <div class="mt-2 h-3 w-full overflow-hidden rounded-full bg-slate-100">
+              <div id="overallBar" class="h-full w-0 rounded-full bg-emerald-500 transition-all"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mx-auto max-w-7xl px-4 pb-8 pt-6 text-xs text-slate-500 sm:px-6">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>© <span id="year"></span> Git @Vaderguy</div>
+        <div class="font-mono">POST /upload → localhost:5000</div>
+      </div>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
+
